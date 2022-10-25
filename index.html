@@ -1,0 +1,963 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google Fonts  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+	<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+    crossorigin="anonymous" />
+
+	<title>Info H-517 Project 1 Akhil Pratyush</title>
+	<link href="/simple-grid.min.css" rel='stylesheet' type='text/css' />
+	<script src="https://d3js.org/d3.v3.min.js"></script>
+	<style>
+		/* text configutration */
+		text {
+			font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+			font-size: 15px;
+		}
+/* axis configuration */
+		.axis path,
+		.axis line {
+			fill: none;
+			stroke: black;
+			shape-rendering:geometricPrecision;
+		}
+/* tick configuration */
+		.tick text {
+			fill: rgb(34, 28, 28);
+			font-size: 5px;
+		}
+/* Bar chart rectangles configuration */
+		rect {
+			stroke: rgb(0, 0, 0);
+		}
+
+/* map line */
+		path {
+			fill: none;
+			stroke: black;
+		}
+/* SVG style */
+		svg {
+			display: block;
+			width: 100%;
+			height: 100%;
+			float:right;
+		}
+/* data point style */
+		svg .data-point {
+			stroke: rgb(0, 0, 0);
+			stroke-width: 1px;
+			fill: rgb(0, 0, 0);
+		}
+/* SVG Data point style */
+		svg .data-point-text {
+			font-family: times;
+			font-size: 5px;
+			fill: rgb(255, 0, 0);
+		}
+/* svg detailing */
+		svg .axis path,
+		svg .axis line {
+			fill: none;
+			stroke: black;
+		}
+
+		svg .axis text {
+			font-family: verdana;
+			font-size: 8px;
+		}
+
+/* tootltip configuration */
+		div.tooltip {
+			position: absolute;
+			text-align: left;
+			width: 100px;
+			height: 50x;
+			padding: 5px;
+			font: 12px verdana;
+			background: #54bedf;
+			border: 5px;
+			border-radius: 5px;
+			pointer-events: none;
+		}
+/* title details */
+		.project-title {
+			padding: 20px;
+			font-size: larger;
+			font-weight: bold;
+			text-align: center;
+		}
+/* bar chart axis configuration */
+		#bar_chart .axis text {
+			font-family: 'Lucida Sans';
+			font-size: 8px;
+		}
+		
+/* body configuration */
+		body {
+			background: linear-gradient(-45deg, #e2d4d0, #bc93a2, #98b7c2, #d0dfdb);
+			background-size: 400% 400%;
+			animation: gradient 15s ease infinite;
+			height: 100vh;
+		}
+/* setting up background animation */
+		@keyframes gradient {
+			0% {
+				background-position: 0% 50%;
+			}
+			50% {
+				background-position: 100% 50%;
+			}
+			100% {
+				background-position: 0% 50%;
+			}
+		}
+		
+	
+	</style>
+</head>
+
+<body>
+	
+	<!-- //@Author: Akhil Pratyush Simhambhatla, October 25, 2002 -->
+	<!--setting up the SVG Elements on the canvas using Google's Material Design concept  -->
+		<div class="row">
+				<div class="row">
+					<div class="col-10">
+						<!-- Setting up the Project title and necessary introduction info about the project -->
+						<div class="primary-title project-title">Cholera Outbreak in London, 1854- A John Snow Map's Enhnaced Perspective</div>
+						<div class="media"></div>
+						<div class="primary-title">History: The rapid growth in industrialization and the increase in population, lack of proper sanitation in the city of London lead to the most renowned Cholera epidemic in the history. John Snow, A famous physician was worried about this epidemic and decided to find out its root cause, thus creating the famous Soho Map. </div>
+						<div class="supporting-text">This visualization project is an attempt to recreate his efforts by drawing the map using D3 JS which helps us in drawing more conlcusions from the case study. The pumps are marked in red whereas the locations of  deaths are marked in blue and pink for male and female respectively. Some surrounding street names are along mentioned and the location of the Work House and the Brewery along the Broad Street.</div>
+						<div class="actions"></div>
+					</div>
+					<div class="grid-container">
+						<div class="side-nav">
+							<ul>
+								<li><p><a href="index.html">Initial Design Doumentation</a> </p></li>
+								<li><p><a href="https://docs.google.com/document/d/1i85iviHlw7GDCPy3zOuT_FeriQzWJbrb/edit?usp=sharing&ouid=106486374949680832043&rtpof=true&sd=true"> Final design, Analysis and Findings</a> </p></li>
+								<li><p><a href="https://www.youtube.com/watch?v=Y_THXMXAczQ">Youtube Video</a> </p></li>
+								<!-- <li><p><a href="videoPage.html">About Me</a> </p></li> -->
+								<li><p><a href="https://docs.google.com/document/d/1wgHYztGRG5WtuWbmiugtO444ppoIC3cQ/edit?usp=sharing&ouid=106486374949680832043&rtpof=true&sd=true">References</a> </p></li>
+
+							</ul>
+						</div>
+					</div>
+				<!-- drawing the map on canvas and adding the details -->
+				<div class="col-7" style="height: 1080px;">
+				<div class ="text-box">Note: Please hover on the Elements to interact with the Map, Hover on the circles for the time line chart, Hover on the bar chart and the pie chart to see the interaction with the map. A quick glance at the information is also provided whenever you hover.</div>
+						<svg  width="100%" height="100%">
+							<text id='label' x='230' y='100' style="font-size: larger;">Recreation of John Snow's Map of London - Soho Area</text>
+							
+							<g id="map" transform="translate(800,700) rotate(180)"></g>
+						</svg>
+				</div>
+				<!-- Line chart -->
+				<div class="col-5" style="height: 1200px;">
+						<div class="row">
+							<svg id="main" width="50%" height="50%">
+								<text id='label' x='200' y='20'>Timeline Vs Total Deaths each day</text>
+								<g id="map" transform="translate(0,-210) rotate(90)"></g>
+							</svg>
+				</div>
+				<!-- Bar Chart -->
+				<div class="row" >
+							<svg width="50%" height="50%"></svg>
+							<div class="co1-5" style="height: 700px; ">
+								<div id="bar_chart"></div>
+									<g id="bar_chart" transform="translate(0,-150)"></g>
+								</svg>
+							</div>
+				</div>
+				<!-- Pie Chart -->
+				<div class="row">
+					<svg width="10%" height="10%"></svg>
+						<div class="row" >
+							<div id="pie_chart"></div>
+								<g id="pie_chart" transform="translate(-90,90)"></g>
+							
+					</svg>
+													
+				</div>
+<script>
+	
+		// declaring all the global variables here.
+		// male indicator- A color assigned to the male population on the map
+		var male_indicator = "#347DC1";
+		// Female indicator- A color assigned to the Female population on the map
+		var female_indicator = "#B85887";
+		// Pump indicator- A color assigned to the Pumpd on the map
+		var pump_color = "#eb3131";
+		// death time date is a set of data that is used to plot the timeline chart  using the info from the deathdays csv file
+		var death_time_date = {};
+		// death sex age data is a set of data used to plot the bar chart using the info from the deaths_age_sex Csv file
+		var death_sex_age_data = {};
+
+		var deaths_data = [];
+		var deathByAgeGroup = {};
+		var deathByGender = [0, 0];
+		var selectedDates = [];
+		var deathAgeSexWithDate = {};
+		// this is to use the year in converting the given date to a proper date format
+		var time = 1854;
+		// this is used to change the size of the map at will
+		var size_multiplier = 29;
+		// formatted version of dates
+		var formatTime = d3.time.format("%d-%b");
+		// creating age groups depending on the data given
+		var age = ["0-10","11-20","21-40","41-60","61-80","80up"]
+		// age_view is the data that corresponds to the respective age_groups and these will be displayed as the lables in the bar chart
+		var age_view = ["0 to 10","11 to 20","21 to 40","41 to 60","61 to 80"," 80+"];
+		
+		// creating the tooltip to display the text boxes upon mouse hovering and appending it to the body of the chart
+		var div = d3.select("body").append("div")
+			.attr("class", "tooltip")
+			.style("opacity", 10);
+		// reading deathdays data and plotting the timeline chart
+		d3.csv('deathdays.csv', (death_days) => {
+			plotTimelineChart(death_days);
+		// reading the ages and sexes  of the people died and plotting them accordingly
+		d3.csv('deaths_age_sex.csv', (death_age_sex) => {
+				plot_death(death_age_sex);
+			});
+		});
+		//creating a function to plot the map
+		function map_draw(data) {//drawing the map
+			var map= d3.select("map")				
+			  .append("svg")
+			  .attr("id","zoom")
+			  .attr("width", "550")
+              .attr("height", "700")
+			  
+     		  .call(d3.behavior.zoom().on("zoom", function () {//creating a zoom behavior
+       			    map1.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+      			  }))
+			.append("g")
+			  
+			.attr("transform","translate(50,150),rotate(0) ");
+				;
+			var line = d3.svg.line()// drawing line between the co-ordinates provided
+				.x((d) => d.x)
+				.y((d) => d.y);
+		
+				var map = d3.select("svg")
+				.select("svg")
+				.attr("id","zoom")
+				.attr("width",150)
+				.attr("height",500)
+				.call(d3.behavior.zoom().on("zoom", function () {
+       			    zoom.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+      			  }))	
+				.append("g")
+				.attr("transform","translate(100,200),rotate(90)");
+			var map = d3.select("svg")
+				.select("#map")
+				.append("g")
+				.attr("id", "map_lines")//appending lines to the mapo=
+				
+			
+			
+						
+			for (var i in data) {// iterating throught the JSON data until all the co ordinated are  connected
+				var segment = data[i];
+				for (var i = 0; i < segment.length; i++) {
+					var start = segment[i];
+					for (var j = i + 1; j < segment.length; j++) {
+						var end = segment[j];
+
+						map.append('line')
+							.style("stroke", "#000305")
+							.style("stroke-width", 0.5)
+							.attr("x1", start.x * size_multiplier)
+							.attr("y1", start.y * size_multiplier)
+							.attr("x2", end.x * size_multiplier)
+							.attr("y2", end.y * size_multiplier);
+						//appending street names to the map
+						map.append("text")
+						.attr("transform", "translate(400,1120), rotate(-160)")
+						.attr("y", "540" )
+						.attr("x", "300")
+						.attr("dy", "1em")
+						.style("text-anchor", "middle")
+						.attr("font-family","sans-serif")
+						.attr("font-size","10")
+						.attr("font-weight","bold")
+						.text("Oxford street");	
+					  map.append("text")
+					  .attr("transform", "translate(-500,500), rotate(-75)")
+                      .attr("y", "942" )
+                      .attr("x", "340")
+                      .attr("dy", "0.8em")
+                      .style("text-anchor", "middle")
+                      .attr("font-family","sans-serif")
+                      .attr("font-size","10")
+                      .attr("font-weight","bold")
+                      .text("Dean Street");
+					  map.append("text")
+                      .attr("transform", "rotate(-55)")
+                      .attr("y", "340" )
+                      .attr("x", "-180")
+                      .attr("dy", "1em")
+                      .style("text-anchor", "middle")
+                      .attr("font-family","sans-serif")
+                      .attr("font-size","10")
+                      .attr("font-weight","bold")
+                      .text("Regent Street");
+					  map.append("text")
+                      .attr("transform", "translate(400,1120), rotate(-160)")
+                      .attr("y", "720" )
+                      .attr("x", "300")
+                      .attr("dy", "1em")
+                      .style("text-anchor", "middle")
+                      .attr("font-family","sans-serif")
+                      .attr("font-size","20")
+                      .attr("font-weight","bold")
+                      .text("Broad street");
+					  //appending Workhouse and brewery to the map
+					  map.append("rect")
+                      .attr("transform", "rotate(68)")
+                      .attr("x", "470")
+                      .attr("y", "-170" )
+                      .attr("height","40")
+                      .attr("width","30")
+                      .attr("dy", "1em")
+                      .attr("stroke-width","1")
+                      .attr("stroke","black")
+                      .attr("fill","#44EDED");
+					  map.append("text")
+                      .attr("transform", "rotate(-355)")
+                      .attr("x", "350")
+                      .attr("y", "360" )
+                      .attr("dy", "1em")
+                      .attr("text-anchor", "middle")
+                      .attr("font-family","sans-serif")
+                      .attr("font-size","4")
+                      .attr("font-weight","bold")
+                      .text("HM");
+					  map.append("rect")
+                        .attr("transform", "translate(415,760), rotate(-160)")
+                        .attr("x", "245")
+                        .attr("y", "395" )
+                        .attr("height","32")
+                        .attr("width","17")
+                        .attr("dy", "1em")
+                        .attr("fill","#a1d76a");
+						map.append("text")
+                        .attr("transform", "translate(415,760), rotate(-160)")
+                        .attr("x", "265")
+                        .attr("y", "405" )
+                        .attr("dy", ".1em")
+                        .attr("text-anchor", "middle")
+                        .attr("font-family","sans-serif")
+                        .attr("font-size","2")
+                        .attr("font-weight","bold")
+                        .text("Brewery")
+				
+
+
+					
+					}
+				}
+			}
+		}
+		
+		var svg = d3.select("#map")
+			.append("svg")
+			.attr("width", 600)
+			.attr("height", 600)
+			.call(d3.behavior.zoom().on("zoom", function () {
+       			    g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+      			  }))
+				.append("g")
+			  .attr("transform","translate(-500,150) ");
+
+
+
+		
+		// creating a timeline chart function
+		function plotTimelineChart(death_days) {
+			var deaths_data = [];
+			for (var i in death_days) {
+				death_time_date[death_days[i].date] = death_days[i].deaths;//taking the death date
+				deaths_data.push({ date: new Date(death_days[i].date + '-' + time), value: death_days[i].deaths })//converting the dateinto a readable format and pushing it into the array
+			}
+			// creating the svg
+			var width = 600;
+			var height = 400;
+			var svg = d3.select("#main")
+				.attr("viewBox", "10 -18 " + width + " " + height)
+			var padding = 55;//creating a padding around the SVG
+			// Setting up the scales
+			var start_date = d3.min(deaths_data, (d) => d.date);//start date of the epidemic
+			start_date.setDate(start_date.getDate());
+			var end_date = d3.max(deaths_data, (d) => d.date);//end date of the epidemic
+			var xScale = d3.time.scale()//setting up the scale for the timeline chart based upon the start and end dates
+				.domain([start_date, end_date])
+				.range([padding, width - padding]);
+			var yScale = d3.scale.linear()//setting up the y scale based upon the maximum deaths- we took 200 as the maximum limit for the y axis
+				.domain([0, 190])
+				.range([height - padding, padding]);
+
+			// setting up the x-axis
+			var format = d3.time.format("%d-%b ");//setting up the date format
+			var xAxis = d3.svg.axis()
+				.scale(xScale)//using the x axis scale which was defined before
+				.orient("bottom")
+				.tickFormat(format)
+				.ticks(d3.time.days, 2);//2 step increase
+			svg.append("g")
+				.attr("class", "axis x-axis")
+				.attr("transform", "translate(0," + (height-padding) + ")")
+				.call(xAxis)
+				.selectAll("text")
+				.style("text-anchor", "end")
+				.attr("dx", "0.1em")
+				.attr("dy", ".6em")
+				.attr("transform", "rotate(-45)");
+			svg.append("text")//creating the x label
+				.attr("class", "x-label")
+				.attr("y", -500)
+				.attr("x", 34)
+				.text("Timeline-->")
+				.attr("class", "axis x-axis")
+				.attr("transform", "translate(400, 800) rotate(0)")
+				.style("font-size", "15px");
+
+			//setting up the  y-axis
+			var yAxis = d3.svg.axis()
+				.scale(yScale)
+				.orient("left")
+				.tickFormat((d) => d)
+				.tickSize(5, 5, 0)
+				.ticks(10);
+			svg.append("g")
+				.attr("class", "axis y-axis")
+				.attr("transform", "translate(" + padding + ",0)")
+				.call(yAxis);
+
+			// creating a  Label for the Y axis
+			svg.append("text")
+				.attr("class", "y-label")
+				.attr("text-anchor", "end")
+				.attr("x", 10)
+				.attr("y", 100)
+				.text("Number of Deaths on different days-->")
+				.attr("transform", "translate(-80, 80) rotate(-90)")
+				.style("font-size", "15px");
+
+			// drawing the line chart 
+			var line = d3.svg.line()
+				.x((d) => xScale(d.date))//taking the date and appending it to the existing scale
+				.y((d) => yScale(d.value));
+			svg.append("svg:path").attr("d", line(deaths_data));
+			// plotting circles as indicators of each day and the corresponding deaths
+			svg.selectAll("circle")
+				.data(deaths_data)
+				.enter()
+				.append("circle")
+				.attr("class", "data-point")
+				.attr("stroke","steelblue")
+				.attr("stroke-linecap","round")
+				.attr("stroke-linejoin","round")
+				.attr("stroke-width",1.5)
+				.attr("id", (d) => "__" + formatTime(d.date))
+				.attr("cx", (d) => xScale(d.date))
+				.attr("cy", (d) => yScale(d.value))
+				.attr("r", (d) => {
+					if (d.value == 0) { //if there is no data retrieved, the radius of the circle will be zero , else the radius is set to 2 for the 
+										// dots on the line chart
+						return 0;
+					}
+					return 3.5;
+				}).on("mouseover", (d) => {//on hovering the mouse pointer on a data point, it would show a text box with the date and the number of 
+											//deaths on that  particular date.
+					div.transition()
+						.duration(200)//duration is set to 200 ms 
+						.style("opacity", 1);
+
+					div.html("<b>Date : </b>" + formatTime(d.date) + "<br/>" + "<b>People Died: </b>" + d.value)// displays the date and the number of people died 
+						.style("left", (d3.event.pageX) + "px")
+						.style("top", (d3.event.pageY - 28) + "px");
+
+					d3.selectAll(".__" + formatTime(d.date))
+						.attr("r", 10);//increases the size of the bubble on the map
+
+				})
+				.on("mouseout", (d) => {
+					div.transition()
+						.duration(500)
+						.style("opacity", 0);
+
+					d3.selectAll(".__" + formatTime(d.date))
+						.attr("r", 4);//on taking the mouse out, the size would be restored back to the original size
+				}).on("click", (d) => {
+					var newId = "__" + formatTime(d.date);
+					if (!selectedDates.includes(newId)) {
+						selectedDates.push(newId);
+					} else {
+						selectedDates.splice(selectedDates.indexOf(newId), 1);
+					}
+
+					// Change opacity
+					d3.selectAll(".data-point").attr("opacity", 1);
+					showOrHideDeaths("death", "hidden");
+		
+
+					for (var ind in selectedDates) {
+						d3.select("#" + selectedDates[ind]).attr("opacity", 1);
+						showOrHideDeaths(selectedDates[ind], "visible");
+					}
+				});
+		}
+		
+
+		d3.json('streets.json', (data) => {
+			map_draw(data);//collecting the data and drawing a map by using the function
+
+			d3.csv('pumps.csv', (pumps_data) => {
+				drawPumps(pumps_data);//collecting the co ordiantes of the pump and plotting them on the graph
+				showLegend();// calling the function to display the legend
+			});
+		});
+		
+		function drawPumps(data) {//drawing the pumps on the map
+			var map = d3.select("svg")
+				.select("#map")
+				.append("g")
+				.attr("id", "pumps")
+				.attr("transform", "rotate(0)");
+			
+			map.selectAll("circle")//creating a circle to indicate a pump
+				.data(data)
+				.enter().append("circle")
+				.style("stroke", "black")
+				.style("fill", pump_color)
+				.attr("r", 15)
+				//Akhil Pratyush
+				.attr("cx", (d) => {
+					return d.x * size_multiplier;
+				})
+				.attr("cy", (d) => {
+					return d.y * size_multiplier
+				});
+		}
+
+		
+
+
+		// a function to extract the information about all the deaths recorded 
+		function plot_death(death_age_sex) {
+			deathAgeSexWithDate = death_age_sex;
+			var index = 0;
+			for (var key in death_time_date) {
+				if (death_time_date.hasOwnProperty(key)) {
+					var date = formatTime(new Date(key + '-' + time));
+					var deathcount = death_time_date[key];
+					death_sex_age_data[date] = [];
+					//Akhil Pratyush
+					while (deathcount > 0 && index < death_age_sex.length) {
+						death_sex_age_data[date].push(death_age_sex[index]);
+						death_age_sex[index].date = date; 
+						if (!deathByAgeGroup.hasOwnProperty(age_view[death_age_sex[index].age])) {
+							deathByAgeGroup[age_view[death_age_sex[index].age]] = 0;
+						}
+						deathByAgeGroup[age_view[death_age_sex[index].age]] += 1;
+						deathByGender[death_age_sex[index].gender] += 1;
+						index++;
+						deathcount--;
+
+						
+
+					}
+				}
+			}
+			//a function to draw th pie chart 
+		function drawPieChart() {
+			var width = 200,
+				height = 180,
+				radius = (height+width)/2-100;
+			var arc = d3.svg.arc()
+				.outerRadius(radius)
+				.innerRadius(0);
+				//Akhil Pratyush
+			var labelArc = d3.svg.arc()
+				.outerRadius(radius)
+				.innerRadius(radius-110);
+			var pie = d3.layout.pie()
+				.value((d) => d.count);
+			var color = d3.scale.ordinal()
+				.range([male_indicator, female_indicator]);
+
+			//appending the pie chart to the SVG
+			var svg = d3.select("#pie_chart").append("svg")
+				.attr("width", width/2)
+				.attr("height", height)
+				.append("g")
+				.attr("transform", "translate(" + width*1.5 + "," + height/2 + ")");
+				data = [];
+				data.push({ "gender": "Male", "count": deathByGender[0] });
+				data.push({ "gender": "Female", "count": deathByGender[1] });
+			//drawing arcs based on the date extracted(number of deaths in each gender)
+			var g = svg.selectAll(".arc")
+				.data(pie(data))
+				.enter().append("g")
+				.attr("class", "arc")
+				.on("mouseover", (d) => {
+					div.transition()
+						.duration(20)
+						.style("opacity", 2);
+
+					div.html("<b>Gender: </b>" + d.data.gender + "<br/>" + "<b> Total_Deaths: </b>" + d.data.count)
+						.style("left", (d3.event.pageX+10) + "px")
+						.style("top", (d3.event.pageY+5) + "px");
+
+					d3.selectAll(("." + d.data.gender + "_death").toLowerCase())
+						.attr("r", 15);
+				})
+				.on("mouseout", (d) => {
+					div.transition()
+						.duration(50)
+						.style("opacity", 0);
+
+					d3.selectAll(("." + d.data.gender + "death").toLowerCase())
+						.attr("r", 4);
+				});
+
+			g.append("path")
+				.attr("d", arc)
+				.style("fill", (d) => color(d.data.gender))
+
+
+			g.append("text")
+				.attr("transform", (d) => "translate(" + labelArc.centroid(d) + ")")
+				.style("font-size", "15px")
+				.text((d) => d.data.gender);
+
+			svg.append("text")
+				.style("font-size", "15px")
+				.attr("x", "-90")
+				.attr("y", "120")
+				.text(" Deaths Distribution- Based on Gender");
+
+		}
+
+			d3.select("#map").append("g")
+				.attr("id", "death_points")
+				.selectAll("circle")
+				.data(deathAgeSexWithDate)
+				.enter()
+				.append("circle")
+				//Akhil Pratyush
+				.attr("class", "death-data-point")
+				.style("stroke", "black")
+				.style("fill", (d) => d.gender == 0 ? male_indicator : female_indicator)
+				.attr("cx", (d) => d.x * (size_multiplier))
+				.attr("cy", (d) => d.y * (size_multiplier))
+				.attr("r", 4)
+				.attr("class", (d) => {
+					var deathss = "death";
+					deathss += " " + (d.gender == 0 ? "male_death" : "female_death");
+					deathss += " __" + age[d.age];
+					deathss += " __" + d.date;
+
+					return deathss;
+				})
+				.on("mouseover", (d) => {
+					div.transition()
+						.duration(20)
+						.style("opacity", 2);
+
+					div.html("<b>Age category: </b>" + age_view[d.age] + "<br/>" + "<b>Gender: </b>" + (d.gender == 0 ? "Male" : "Female"))
+						.style("left", (d3.event.pageX) + "px")
+						.style("top", (d3.event.pageY) + "px");
+				})
+				.on("mouseout", (d) => {
+					div.transition()
+						.duration(50)
+						.style("opacity", 0);
+				});
+
+			bar_graph(deathByAgeGroup);
+			drawPieChart();
+		}
+		//creating a function to draw the bar graph
+		function bar_graph(deathByAgeGroup) {
+
+			var margin = { right: 50, bottom: 50, left: 50,top: 40 },
+				height = 300,
+				width = 400,
+				adjusted_width = width -20- margin.left - margin.right,
+				adjusted_height = height - margin.top - margin.bottom-30;
+
+			var dataset = [];
+
+			for (var ind in age_view) {
+				dataset.push({ "index": ind, "category": age_view[ind], "count": deathByAgeGroup[age_view[ind]] });
+			}
+
+			var svg = d3.select('#bar_chart')
+				.append('svg')
+				.attr("width", '100%')
+				.attr("height", '90%')
+				.attr("viewBox", "0 0 " + width + " " + height)
+				.append("g")
+				.attr("transform","translate(" + margin.left + "," + margin.bottom + ")");
+
+			svg.append("text")
+				.attr("x", 25)
+				.attr("y", -20)
+				.attr("id", "deaths_per_age_group")
+				.text("Number of deaths in different age groups")
+				.style("font-size", "small");
+			
+			var x = d3.scale.ordinal().rangeRoundBands([1, adjusted_width], .6, .04);
+			var xAxis = d3.svg.axis()
+				.scale(x)
+				.orient("bottom")
+				.tickSize(1)
+				.tickPadding(2);
+
+			x.domain(dataset.map((d) => d.category));
+
+			// X Axis Label
+			svg.append("text")
+				.attr("class", "x-label")
+				.attr("x", 100)
+				.attr("y", 220)
+				.text("Age Distribution-->")
+				.style("font-size", "10px");
+
+			svg.append("g")
+				.attr("class", "axis easting")
+				.attr("transform", "translate(5," + adjusted_height + ")")
+				.call(xAxis)
+				.selectAll("text")
+				.style("text-anchor", "left");
+
+			var y = d3.scale.linear().range([adjusted_height, 0]);
+			var yAxis = d3.svg.axis()
+				.scale(y)
+				.orient("left")
+				.ticks(6);
+
+			y.domain([0, d3.max(dataset, (d) => d.count) + 50]);
+
+
+			// Y Axis Label
+			svg.append("text")
+				.attr("class", "y-label")
+				.attr("text-anchor", "end")
+				.attr("x", 0)
+				.attr("y", 110)
+				.text("Total Deaths on each day-->")
+				.attr("transform", "translate(-145, 35) rotate(-90)")
+				.style("font-size", "10px");
+
+			svg.append("g")
+				.attr("class", "axis northing")
+				.call(yAxis)
+				.selectAll("line")
+				.attr("x2", adjusted_width)
+
+			svg.selectAll('rect')
+				.data(dataset)
+				.enter()
+				.append('rect')
+				.attr('width', (d, i) => {
+					return x.rangeBand();
+				})
+				.attr('height', (d, i) => {
+					return adjusted_height - y(d.count);
+				})
+				.attr('x', (d, i) => {
+					return x(d.category);
+				})
+				.attr('y', (d, i) => {
+					return y(d.count);
+				})
+				.attr('fill', '#ab394c')
+				.on("mouseover", (d) => {
+					div.transition()
+						.duration(200)
+						.style("opacity", 1);
+
+					div.html("<b>Age: </b>" + d.category + "<br/>" + "<b>Deaths in this age group: </b>" + d.count)
+						.style("left", (d3.event.pageX) + "px")
+						.style("top", (d3.event.pageY) + "px");
+
+					d3.selectAll(".__" + age[d.index])
+						.attr("r",11);
+				})
+				.on("mouseout", (d) => {
+					div.transition()
+						.duration(500)
+						.style("opacity", 0);
+
+					d3.selectAll(".__" + age[d.index])
+						.attr("r", 4);
+				}).on("click", (d) => {
+					//Akhil Pratyush
+				});
+			}
+			//creating legends for the map
+		function showLegend() {
+			var display_legend = d3.select("svg")
+				.select("#map")
+				.append("g")
+				.attr("transform", "translate(400, -50),rotate(-180)")
+				.classed("legend", true);
+
+			pumps_legend = display_legend.append("g")
+				.classed("pumps_legend_display", true)
+				.attr("transform", "translate(100,-90)");
+			pumps_legend.append("circle")
+				.attr("class", "legend-circle")
+				.attr("cx", -15)
+				.attr("cy", 0)
+				.attr("r", 8)
+				.style("stroke", "black")
+				.style("fill", pump_color);
+
+			pumps_legend.append("text")
+				.attr("id", "pumps_legend_display_text")
+				.text("Location of Pumps")
+				.style("font-size", "15px");
+			female_legend_display = display_legend.append("g")
+				.classed("female_deaths", true)
+				.attr("transform", "translate(100, -60)");
+
+			female_legend_display.append("circle")
+				.attr("class", "legend-circle")
+				.attr("cx", -15)
+				.attr("cy", 2)
+				.attr("r", 8)
+				.style("stroke", "black")
+				.style("fill", female_indicator);
+
+			female_legend_display.append("text")
+				.attr("id", "female_deaths_indicator")
+				.text("Places where Female deaths occured")
+				.style("font-size", "15px");
+			male_legend_display = display_legend.append("g")
+				.classed("male_deaths", true)
+				.attr("transform", "translate(100, -30)");
+
+			male_legend_display.append("circle")
+				.attr("class", "legend-circle")
+				.attr("cx", -15)
+				.attr("cy", 4)
+				.attr("r", 8)
+				.style("stroke", "black")
+				.style("fill", male_indicator);
+
+			male_legend_display.append("text")
+				.attr("id", "male_deaths_indicator")
+				.text("Places where Male deaths occured")
+				.style("font-size", "15px");
+
+			
+		}
+
+	</script>
+</body>
+<body>
+	<div class="footer">
+		<p>&copy; Author: Akhil Pratyush Simhambhatla</p>
+		<p>FA22: H517 Visualization Design, Analysis, and Evaluation</p>
+		<div class ="frame">
+		  
+		  
+		  
+		  <a href="https://www.linkedin.com/in/akhilpratyush/" class="btn">
+	   <i class="fab fa-linkedin-in" style="color:#0e76a8;"></i>
+	  </a>
+		  <a href="https://github.com/asimham" class="btn">
+	   <i class="fab fa-github" style="color:#321c1f;"></i>
+	  
+	  </a>
+	  </div>	
+</body>
+<style>
+
+
+h1 {
+  position: relative;
+  text-align: center;
+  color: #353535;
+  font-family: "Cormorant Garamond", serif;
+  bottom: 30px;
+}
+h1:before{
+  position: absolute;
+  content: "";
+  bottom: -10px;
+  width: 100%;
+  height: 2px;
+  background-color: orange;
+}
+
+.frame{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  height: 80px;
+  width: 350px;
+  position: relative;
+   box-shadow:
+   -7px -7px 20px 0px #fff9,
+   -4px -4px 5px 0px #fff9,
+   7px 7px 20px 0px #0002,
+   4px 4px 5px 0px #0001,
+   inset 0px 0px 0px 0px #fff9,
+   inset 0px 0px 0px 0px #0001,
+   inset 0px 0px 0px 0px #fff9,        inset 0px 0px 0px 0px #0001;
+ transition:box-shadow 0.6s cubic-bezier(.79,.21,.06,.81);
+   border-radius: 10px;
+}
+
+.btn{
+  height: 35px;
+  width: 35px;
+  border-radius: 3px;
+  background: #e0e5ec;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
+  box-shadow:
+   -7px -7px 20px 0px #fff9,
+   -4px -4px 5px 0px #fff9,
+   7px 7px 20px 0px #0002,
+   4px 4px 5px 0px #0001,
+   inset 0px 0px 0px 0px #fff9,
+   inset 0px 0px 0px 0px #0001,
+   inset 0px 0px 0px 0px #fff9,        inset 0px 0px 0px 0px #0001;
+ transition:box-shadow 0.6s cubic-bezier(.79,.21,.06,.81);
+  font-size: 16px;
+  color: rgba(42, 52, 84, 1);
+  text-decoration: none;
+}
+.btn:active{
+  box-shadow:  4px 4px 6px 0 rgba(255,255,255,.5),
+              -4px -4px 6px 0 rgba(116, 125, 136, .2), 
+    inset -4px -4px 6px 0 rgba(255,255,255,.5),
+    inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
+}
+</style>
+</html>
